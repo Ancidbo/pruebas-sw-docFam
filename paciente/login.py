@@ -33,8 +33,7 @@ class Login(unittest.TestCase):
                 contrasenia = linea [1]
 
                 # Share items
-
-                driver.find_element_by_xpath('//*[@id="flipkart-navbar"]/div/div[2]/div[3]/a').click()
+                driver.find_element_by_xpath('/html/body/app-root/div/app-inicio/div[1]/div/div[1]/div[2]/a[1]').click()
 
             #Login
                 email = driver.find_element_by_id ('email')
