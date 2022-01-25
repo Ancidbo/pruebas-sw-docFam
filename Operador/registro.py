@@ -1,7 +1,6 @@
 import unittest
-import csv, operator
-import random
-import smtplib
+import csv
+import time
 from pyunitreport import HTMLTestRunner
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
@@ -18,83 +17,102 @@ class RegisterNewUser(unittest.TestCase):
 
     def test_new_user(self):
         driver = self.driver
-        driver.get('https://mydocfam.com/registro')
+        driver.get('https://mydocfam.com')
         driver.implicitly_wait(10) 
         
         lista = []
         with open('registro.csv') as data:
             entrada = csv.reader(data)
             lista = list (entrada)
-            print(lista)
-        # x=0
-        # for linea in lista:
-        #     print(linea)
-            # print ("Iteracion " , x)
-            # if(x==0):
-            #     x=x+1        
-            # else:
-            #     #Variables
-            #     nombre = linea [0]
-            #     apellido_p = linea[1]
-            #     apellido_m = linea [2]
-            #     correo = linea [3]
-            #     telefono = linea [4]
-            #     fecha= linea[5]               
-            #     sexo = linea[6]
-               
-            #     #Share items
-            #     driver.find_element_by_xpath('//*[@id="login"]/div/div/div[3]/div[1]/a').click()
+            
+        x=0
+        for linea in lista:            
+            if(x==0):
+                x=x+1        
+            else:
+                #Variables
+                correo_operador = linea [9]
+                contrasena = linea [10]
+                correo = linea [0]
+                contrasena_paciente = linea [1]
+                confirmacion_contrasena = linea [2]
+                nombre = linea [3]
+                apellido_p = linea[4]
+                apellido_m = linea [5]
+                nacimiento = linea [6]
+                sexo = linea[7]
+                telefono = linea [8]
+            
+               # Share items
+                driver.find_element_by_xpath('/html/body/app-root/div/app-inicio/div[1]/div/div[1]/div[2]/a[1]').click()
 
-            #     email = driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[1]/input')
-            #     email.send_keys(correo)
+            #Login
+                email = driver.find_element_by_id ('email')
+                password = driver.find_element_by_id('password')
 
-            #     #generate new password
-            #     rando = random.randrange(10, 100)
-            #     passwordd = nombre[0:2] + correo [0:3] + fecha [0:2] + telefono [0:2]
-            #     # print(password)
+                
+                self.assertTrue(email.is_enabled() 
+                and password.is_enabled())
 
-            #     password = driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[2]/input')
-            #     password.send_keys(passwordd)
+                email.send_keys(correo_operador)
+                password.send_keys(contrasena)
 
-            #     confirm_password = driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[3]/input')
-            #     confirm_password.send_keys(passwordd)
+                input = driver.find_element_by_css_selector('body > ngb-modal-window > div > div > div.modal-body > div > form > div > div > div > div:nth-child(1) > button')
+                input.click()
 
-            #     name=driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[4]/input')
-            #     name.send_keys(nombre)
+                driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[1]/button').click()
+                
+                #share profile
+                submit_botton = driver.find_element_by_xpath('//*[@id="body"]/div[1]/div[2]/nav/ul/li[2]').click()
 
-            #     first_name = driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[5]/input')
-            #     first_name.send_keys(apellido_p)  
+                driver.find_element_by_xpath('/html/body/app-root/div/app-pacientes/div/div[1]/div[1]/button').click()
 
-            #     last_name = driver.find_element_by_xpath('/html/body/app-root/div/app-register/body/div/div/div/div[2]/div[6]/input')
-            #     last_name.send_keys(apellido_m)
+                email = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[1]')
+                email.send_keys(correo)
 
-            #     date = driver.find_element_by_id('date')
-            #     date.send_keys(fecha)
+                password = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[2]')
+                password.send_keys(contrasena_paciente)
 
-            #     select_sex = Select(driver.find_element_by_id('sexo'))
-            #     select_sex.select_by_visible_text(sexo)
+                confirm_password = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[3]')
+                confirm_password.send_keys(confirmacion_contrasena)
 
-            #     number=driver.find_element_by_name('telefono')
-            #     number.send_keys(telefono)
+                name=driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[4]')
+                name.send_keys(nombre)
 
-            #     self.assertTrue(email.is_enabled()
-            #     and password.is_enabled()
-            #     and confirm_password.is_enabled()
-            #     and confirm_password.is_enabled()
-            #     and name.is_enabled()
-            #     and first_name.is_enabled()
-            #     and last_name.is_enabled())
+                first_name = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[5]')
+                first_name.send_keys(apellido_p)  
+
+                last_name = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div/div/div/input[6]')
+                last_name.send_keys(apellido_m)
+
+                date = driver.find_element_by_id('date')
+                date.send_keys(nacimiento)
+
+                select_sex = Select(driver.find_element_by_id('sexo'))
+                select_sex.select_by_visible_text(sexo)
+
+                number=driver.find_element_by_name('telefono')
+                number.send_keys(telefono)
+
+                self.assertTrue(email.is_enabled()
+                and password.is_enabled()
+                and confirm_password.is_enabled()
+                and confirm_password.is_enabled()
+                and name.is_enabled()
+                and first_name.is_enabled()
+                and last_name.is_enabled())
 
                          
-            #     create_account = driver.find_element_by_xpath('//*[@id="container-princ"]/app-register/body/div/div/div/div[2]/div[10]/input')
-            #     self.assertTrue(create_account.is_displayed())
-            #     create_account.click()
+                create_account = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/input')
+                self.assertTrue(create_account.is_displayed())
+                create_account.click()
+                time.sleep(3)
     
-            #     accept_terms = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[2]/div[2]/input')
-            #     self.assertTrue(accept_terms.is_displayed())
-            #     accept_terms.click()
+                close_modal = driver.find_element_by_xpath('/html/body/ngb-modal-window/div/div/div[1]/button')
+                close_modal.click()
 
-
+                # Get out System
+                driver.find_element_by_xpath('//*[@id="body"]/header/div/div[2]/a/div').click()       
 
 if __name__ == "__main__":
     unittest.main(verbosity = 2, testRunner = HTMLTestRunner(output= 'reportes',report_name= 'registro_paciente'))
